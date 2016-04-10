@@ -1,8 +1,6 @@
-#ifndef WebData_h
-#define WebData_h
+#pragma once
 
 #include "application.h"
 
-void readWebData(float& temperature, String& wind, String& humidity);
-
- #endif
+void readWebWeather(float& temperature, String& wind, String& humidity);
+void readWebStock(String webAddress, float& price, float& change);

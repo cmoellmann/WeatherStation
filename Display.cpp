@@ -38,7 +38,8 @@ String Display::twoDigits(uint8_t number) {
 }
 
 void Display::updateDisplay(enum displayType_t type,
-  float tIn, float tOut, String wind, String humidity) {
+  float tIn, float tOut, String wind, String humidity,
+  stock_t stocks[], uint numStocks) {
 
   myDisplay->clearDisplay();   // clears the screen and buffer
 
@@ -82,7 +83,7 @@ void Display::updateDisplay(enum displayType_t type,
     myDisplay->print("/");
     myDisplay->print(Time.year());
   }
-  else {
+  else if (type == TIME) {
     myDisplay->setTextSize(4);
     // display time
     myDisplay->setCursor(5,20);
@@ -95,6 +96,40 @@ void Display::updateDisplay(enum displayType_t type,
     }
     showColon = !showColon;
     print2digits(Time.minute());
+  }
+  else {
+    uint index = type-STOCK_1;
+
+    if (index < 0 || index > numStocks-1) {
+      Serial.println("ERROR: invalid stock index");
+      index = 0;
+    }
+
+    // stock name
+    myDisplay->setTextSize(1);
+    myDisplay->setCursor(0,0);
+    myDisplay->print(stocks[index].name);
+
+    // last price
+    myDisplay->setCursor(0,20);
+    myDisplay->print(stocks[index].price,2);
+
+    // change %
+    myDisplay->setCursor(60,20);
+    myDisplay->print(stocks[index].change, 2);
+    myDisplay->print("%");
+
+    // market value
+    myDisplay->setCursor(0,40);
+    float marketValue = stocks[index].price * stocks[index].quantity;
+    myDisplay->print(marketValue, 2);
+
+    // profit %
+    myDisplay->setCursor(60,40);
+    float entryValue = stocks[index].entryPrice * stocks[index].quantity;
+    float profit = marketValue - entryValue;
+    myDisplay->print(profit / entryValue * 100.0, 2);
+    myDisplay->print("%");
   }
 
   myDisplay->display();
