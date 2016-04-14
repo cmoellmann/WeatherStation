@@ -1,4 +1,5 @@
 #include "Display.h"
+#include "Stocks.h"
 
 void Display::setup() {
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
@@ -96,6 +97,29 @@ void Display::updateDisplay(enum displayType_t type,
     }
     showColon = !showColon;
     print2digits(Time.minute());
+  }
+  else if (type == STOCK_TOTAL) {
+    myDisplay->setTextSize(1);
+    myDisplay->setCursor(0,0);
+
+    float entryValSum;
+    float marketValSum;
+    float relProfit;
+
+    getSumData(stocks, entryValSum, marketValSum, relProfit);
+
+    // sum of entry values
+    myDisplay->setCursor(0,0);
+    myDisplay->print(entryValSum, 2);
+
+    // sum of market values
+    myDisplay->setCursor(60,0);
+    myDisplay->print(marketValSum, 2);
+
+    // profit %
+    myDisplay->setCursor(0,20);
+    myDisplay->print(relProfit, 2);
+    myDisplay->print("%");
   }
   else {
     uint index = type-STOCK_1;

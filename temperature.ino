@@ -20,7 +20,7 @@ All text above, and the splash screen must be included in any redistribution
 #include "Adafruit_SSD1306.h"
 #include "OneWire.h"
 #include "DallasTemperature.h"
-//#include "Stocks.h"
+#include "Stocks.h"
 #include "WebData.h"
 #include "Display.h"
 
@@ -46,7 +46,6 @@ Adafruit_SSD1306 display(OLED_RESET);
 Display myDisplay(&display);
 enum displayType_t displayType = MULTI;
 
-#define NUM_STOCKS 3
 stock_t stocks[NUM_STOCKS] = {
   { "Global Sel Div 100", "globselect.php", 27.93, 105.0,    0.0, 0.0 },
   { "Global Titans 50",   "globtitans.php", 28.78,  41.6973, 0.0, 0.0 },
@@ -83,21 +82,7 @@ void setup()   {
 }
 
 int toggleDisp(String command) {
-  if (displayType == MULTI) {
-    displayType = TIME;
-  }
-  else if (displayType == TIME) {
-    displayType = STOCK_1;
-  }
-  else if (displayType == STOCK_1) {
-    displayType = STOCK_2;
-  }
-  else if (displayType == STOCK_2) {
-    displayType = STOCK_3;
-  }
-  else {
-    displayType = MULTI;
-  }
+  displayType = (displayType_t)((displayType + 1) % DISPLAY_LAST);
   return 1;
 }
 

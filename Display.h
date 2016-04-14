@@ -6,7 +6,7 @@
 
 #define OLED_RESET D4
 
-enum displayType_t { TIME, MULTI, STOCK_1, STOCK_2, STOCK_3 };
+enum displayType_t { TIME, MULTI, STOCK_TOTAL, STOCK_1, STOCK_2, STOCK_3, DISPLAY_LAST };
 
 class Display {
 public:
